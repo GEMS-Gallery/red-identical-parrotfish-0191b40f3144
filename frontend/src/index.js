@@ -146,7 +146,7 @@ async function addTask(name, dueDate, categoryId) {
 async function updateTask(id, name, dueDate, categoryId) {
     try {
         await backend.updateTask(BigInt(id), name, dueDate, BigInt(categoryId));
-        setTimeout(loadTasks, 100); // Add a small delay before reloading
+        await loadTasks();
     } catch (error) {
         console.error('Error in updateTask:', error);
     }
@@ -173,7 +173,7 @@ async function addCategory(name, icon) {
 async function updateCategory(id, name, icon) {
     try {
         await backend.updateCategory(BigInt(id), name, icon);
-        setTimeout(loadTasks, 100); // Add a small delay before reloading
+        await loadTasks();
     } catch (error) {
         console.error('Error in updateCategory:', error);
     }
