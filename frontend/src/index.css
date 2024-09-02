@@ -34,7 +34,7 @@ h2 {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 0;
+    padding: 0.75rem 0;
     border-bottom: 1px solid #e5e7eb;
 }
 
@@ -46,17 +46,6 @@ h2 {
     font-size: 0.875rem;
     color: #374151;
     font-weight: 500;
-    flex-grow: 1;
-    margin-right: 1rem;
-}
-
-.category {
-    font-size: 0.75rem;
-    background-color: #dbeafe;
-    color: #1e40af;
-    padding: 0.25rem 0.5rem;
-    border-radius: 9999px;
-    margin-right: 0.5rem;
 }
 
 .due-date {
@@ -78,29 +67,32 @@ h2 {
         align-items: flex-start;
     }
     
-    .task-name {
-        margin-bottom: 0.5rem;
+    .due-date {
+        margin-top: 0.5rem;
     }
-}
-
-form {
-    margin-bottom: 2rem;
-}
-
-input, button {
-    margin-right: 0.5rem;
-    padding: 0.5rem;
-    font-size: 0.875rem;
 }
 
 button {
     background-color: #3b82f6;
     color: white;
     border: none;
+    padding: 0.5rem 1rem;
     border-radius: 0.25rem;
     cursor: pointer;
+    font-size: 0.875rem;
 }
 
 button:hover {
     background-color: #2563eb;
+}
+
+input, select {
+    padding: 0.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+}
+
+form {
+    margin-bottom: 1rem;
 }
