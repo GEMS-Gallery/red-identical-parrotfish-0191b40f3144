@@ -1,22 +1,3 @@
-type Task = 
- record {
-   categoryId: nat;
-   dueDate: text;
-   id: nat;
-   name: text;
- };
-type Category = 
- record {
-   icon: text;
-   id: nat;
-   name: text;
- };
 service : {
-  addCategory: (text, text) -> (nat);
-  addTask: (text, text, nat) -> (nat);
-  deleteTask: (nat) -> (bool);
-  getCategories: () -> (vec Category) query;
-  getTasks: () -> (vec Task) query;
-  updateCategory: (nat, text, text) -> (bool);
-  updateTask: (nat, text, text, nat) -> (bool);
+  greet: (text) -> (text);
 }
