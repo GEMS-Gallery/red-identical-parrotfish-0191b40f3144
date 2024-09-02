@@ -144,11 +144,24 @@
             left: auto !important;
             right: 0 !important;
         }
+
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            display: none;
+            z-index: 1000;
+        }
     </style>
 </head>
 <body>
     <div id="categories-container"></div>
     <div class="add-category">+ Add Category</div>
+    <div id="notification" class="notification"></div>
 
     <script src="/src/index.js" type="module"></script>
 </body>

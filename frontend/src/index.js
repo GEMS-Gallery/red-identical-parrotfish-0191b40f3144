@@ -120,6 +120,15 @@ function updateTagColors() {
     });
 }
 
+function showNotification(message) {
+    const notification = document.getElementById('notification');
+    notification.textContent = message;
+    notification.style.display = 'block';
+    setTimeout(() => {
+        notification.style.display = 'none';
+    }, 3000);
+}
+
 async function handleTaskEdit(event) {
     try {
         const taskId = parseInt(event.target.dataset.id);
@@ -132,8 +141,10 @@ async function handleTaskEdit(event) {
         console.log('Updating task:', { taskId, name, dueDate, categoryId, tag });
         await updateTask(taskId, name, dueDate, categoryId, tag);
         updateTagColors();
+        showNotification('Task updated successfully');
     } catch (error) {
         console.error('Error updating task:', error);
+        showNotification('Error updating task');
     }
 }
 
@@ -145,13 +156,16 @@ async function handleCategoryEdit(event) {
 
         console.log('Updating category:', { categoryId, name, icon });
         await updateCategory(categoryId, name, icon);
+        showNotification('Category updated successfully');
     } catch (error) {
         console.error('Error updating category:', error);
+        showNotification('Error updating category');
     }
 }
 
 async function handleAddTask(event) {
     try {
+        event.target.disabled = true;
         const categoryId = parseInt(event.target.dataset.categoryId);
         const name = 'New Task';
         const dueDate = new Date().toISOString().split('T')[0];
@@ -159,8 +173,12 @@ async function handleAddTask(event) {
 
         console.log('Adding task:', { name, dueDate, categoryId, tag });
         await addTask(name, dueDate, categoryId, tag);
+        showNotification('Task added successfully');
     } catch (error) {
         console.error('Error adding task:', error);
+        showNotification('Error adding task');
+    } finally {
+        event.target.disabled = false;
     }
 }
 
@@ -171,8 +189,10 @@ async function handleAddCategory() {
 
         console.log('Adding category:', { name, icon });
         await addCategory(name, icon);
+        showNotification('Category added successfully');
     } catch (error) {
         console.error('Error adding category:', error);
+        showNotification('Error adding category');
     }
 }
 
@@ -180,8 +200,10 @@ async function handleDeleteTask(event) {
     try {
         const taskId = parseInt(event.target.dataset.id);
         await deleteTask(taskId);
+        showNotification('Task deleted successfully');
     } catch (error) {
         console.error('Error deleting task:', error);
+        showNotification('Error deleting task');
     }
 }
 
@@ -191,6 +213,7 @@ async function addTask(name, dueDate, categoryId, tag) {
         await loadTasks();
     } catch (error) {
         console.error('Error in addTask:', error);
+        throw error;
     }
 }
 
@@ -200,6 +223,7 @@ async function updateTask(id, name, dueDate, categoryId, tag) {
         await loadTasks();
     } catch (error) {
         console.error('Error in updateTask:', error);
+        throw error;
     }
 }
 
@@ -209,6 +233,7 @@ async function deleteTask(id) {
         await loadTasks();
     } catch (error) {
         console.error('Error in deleteTask:', error);
+        throw error;
     }
 }
 
@@ -218,6 +243,7 @@ async function addCategory(name, icon) {
         await loadTasks();
     } catch (error) {
         console.error('Error in addCategory:', error);
+        throw error;
     }
 }
 
@@ -227,6 +253,7 @@ async function updateCategory(id, name, icon) {
         await loadTasks();
     } catch (error) {
         console.error('Error in updateCategory:', error);
+        throw error;
     }
 }
 
