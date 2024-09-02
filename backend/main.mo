@@ -3,6 +3,7 @@ import Nat "mo:base/Nat";
 
 import Array "mo:base/Array";
 import Text "mo:base/Text";
+import Debug "mo:base/Debug";
 
 actor {
   type Task = {
@@ -43,10 +44,12 @@ actor {
     nextTaskId += 1;
     let newTask : Task = { id; name; dueDate; categoryId };
     tasks := Array.append(tasks, [newTask]);
+    Debug.print("Task added: " # debug_show(newTask));
     id
   };
 
   public func updateTask(id: Nat, name: Text, dueDate: Text, categoryId: Nat) : async Bool {
+    Debug.print("Updating task: " # debug_show({ id; name; dueDate; categoryId }));
     tasks := Array.map(tasks, func (task: Task) : Task {
       if (task.id == id) {
         { id; name; dueDate; categoryId }
@@ -58,6 +61,7 @@ actor {
   };
 
   public func deleteTask(id: Nat) : async Bool {
+    Debug.print("Deleting task: " # debug_show(id));
     tasks := Array.filter(tasks, func (task: Task) : Bool { task.id != id });
     true
   };
@@ -71,10 +75,12 @@ actor {
     nextCategoryId += 1;
     let newCategory : Category = { id; name; icon };
     categories := Array.append(categories, [newCategory]);
+    Debug.print("Category added: " # debug_show(newCategory));
     id
   };
 
   public func updateCategory(id: Nat, name: Text, icon: Text) : async Bool {
+    Debug.print("Updating category: " # debug_show({ id; name; icon }));
     categories := Array.map(categories, func (category: Category) : Category {
       if (category.id == id) {
         { id; name; icon }

@@ -1,34 +1,38 @@
 import { backend } from 'declarations/backend';
 
 async function loadTasks() {
-    const tasks = await backend.getTasks();
-    const categories = await backend.getCategories();
-    const container = document.getElementById('categories-container');
-    container.innerHTML = '';
+    try {
+        const tasks = await backend.getTasks();
+        const categories = await backend.getCategories();
+        const container = document.getElementById('categories-container');
+        container.innerHTML = '';
 
-    categories.forEach(category => {
-        const categoryHtml = `
-            <h2>
-                <i data-feather="${category.icon}" class="category-icon"></i>
-                <span contenteditable="true" class="category-name" data-id="${category.id}">${category.name}</span>
-            </h2>
-            <ul class="task-list" id="category-${category.id}">
-                ${tasks
-                    .filter(task => task.categoryId === category.id)
-                    .map(task => `
-                        <li class="task-item" id="task-${task.id}">
-                            <span contenteditable="true" class="task-name" data-id="${task.id}">${task.name}</span>
-                            <span contenteditable="true" class="due-date ${new Date(task.dueDate) < new Date() ? 'overdue' : ''}" data-id="${task.id}">${task.dueDate}</span>
-                        </li>
-                    `).join('')}
-            </ul>
-            <div class="add-task" data-category-id="${category.id}">+ Add Task</div>
-        `;
-        container.insertAdjacentHTML('beforeend', categoryHtml);
-    });
+        categories.forEach(category => {
+            const categoryHtml = `
+                <h2>
+                    <i data-feather="${category.icon}" class="category-icon"></i>
+                    <span contenteditable="true" class="category-name" data-id="${category.id}">${category.name}</span>
+                </h2>
+                <ul class="task-list" id="category-${category.id}">
+                    ${tasks
+                        .filter(task => task.categoryId === category.id)
+                        .map(task => `
+                            <li class="task-item" id="task-${task.id}">
+                                <span contenteditable="true" class="task-name" data-id="${task.id}">${task.name}</span>
+                                <span contenteditable="true" class="due-date ${new Date(task.dueDate) < new Date() ? 'overdue' : ''}" data-id="${task.id}">${task.dueDate}</span>
+                            </li>
+                        `).join('')}
+                </ul>
+                <div class="add-task" data-category-id="${category.id}">+ Add Task</div>
+            `;
+            container.insertAdjacentHTML('beforeend', categoryHtml);
+        });
 
-    feather.replace();
-    addEventListeners();
+        feather.replace();
+        addEventListeners();
+    } catch (error) {
+        console.error('Error loading tasks:', error);
+    }
 }
 
 function addEventListeners() {
@@ -48,61 +52,101 @@ function addEventListeners() {
 }
 
 async function handleTaskEdit(event) {
-    const taskId = parseInt(event.target.dataset.id);
-    const taskElement = document.getElementById(`task-${taskId}`);
-    const name = taskElement.querySelector('.task-name').textContent;
-    const dueDate = taskElement.querySelector('.due-date').textContent;
-    const categoryId = parseInt(taskElement.closest('.task-list').id.split('-')[1]);
+    try {
+        const taskId = parseInt(event.target.dataset.id);
+        const taskElement = document.getElementById(`task-${taskId}`);
+        const name = taskElement.querySelector('.task-name').textContent.trim() || 'Unnamed Task';
+        const dueDate = taskElement.querySelector('.due-date').textContent.trim() || new Date().toISOString().split('T')[0];
+        const categoryId = parseInt(taskElement.closest('.task-list').id.split('-')[1]);
 
-    await updateTask(taskId, name, dueDate, categoryId);
+        console.log('Updating task:', { taskId, name, dueDate, categoryId });
+        await updateTask(taskId, name, dueDate, categoryId);
+    } catch (error) {
+        console.error('Error updating task:', error);
+    }
 }
 
 async function handleCategoryEdit(event) {
-    const categoryId = parseInt(event.target.dataset.id);
-    const name = event.target.textContent;
-    const icon = event.target.previousElementSibling.dataset.feather;
+    try {
+        const categoryId = parseInt(event.target.dataset.id);
+        const name = event.target.textContent.trim() || 'Unnamed Category';
+        const icon = event.target.previousElementSibling.dataset.feather || 'folder';
 
-    await updateCategory(categoryId, name, icon);
+        console.log('Updating category:', { categoryId, name, icon });
+        await updateCategory(categoryId, name, icon);
+    } catch (error) {
+        console.error('Error updating category:', error);
+    }
 }
 
 async function handleAddTask(event) {
-    const categoryId = parseInt(event.target.dataset.categoryId);
-    const name = 'New Task';
-    const dueDate = new Date().toISOString().split('T')[0];
+    try {
+        const categoryId = parseInt(event.target.dataset.categoryId);
+        const name = 'New Task';
+        const dueDate = new Date().toISOString().split('T')[0];
 
-    await addTask(name, dueDate, categoryId);
+        console.log('Adding task:', { name, dueDate, categoryId });
+        await addTask(name, dueDate, categoryId);
+    } catch (error) {
+        console.error('Error adding task:', error);
+    }
 }
 
 async function handleAddCategory() {
-    const name = 'New Category';
-    const icon = 'folder';
+    try {
+        const name = 'New Category';
+        const icon = 'folder';
 
-    await addCategory(name, icon);
+        console.log('Adding category:', { name, icon });
+        await addCategory(name, icon);
+    } catch (error) {
+        console.error('Error adding category:', error);
+    }
 }
 
 async function addTask(name, dueDate, categoryId) {
-    await backend.addTask(name, dueDate, BigInt(categoryId));
-    await loadTasks();
+    try {
+        await backend.addTask(name, dueDate, BigInt(categoryId));
+        await loadTasks();
+    } catch (error) {
+        console.error('Error in addTask:', error);
+    }
 }
 
 async function updateTask(id, name, dueDate, categoryId) {
-    await backend.updateTask(BigInt(id), name, dueDate, BigInt(categoryId));
-    await loadTasks();
+    try {
+        await backend.updateTask(BigInt(id), name, dueDate, BigInt(categoryId));
+        setTimeout(loadTasks, 100); // Add a small delay before reloading
+    } catch (error) {
+        console.error('Error in updateTask:', error);
+    }
 }
 
 async function deleteTask(id) {
-    await backend.deleteTask(BigInt(id));
-    await loadTasks();
+    try {
+        await backend.deleteTask(BigInt(id));
+        await loadTasks();
+    } catch (error) {
+        console.error('Error in deleteTask:', error);
+    }
 }
 
 async function addCategory(name, icon) {
-    await backend.addCategory(name, icon);
-    await loadTasks();
+    try {
+        await backend.addCategory(name, icon);
+        await loadTasks();
+    } catch (error) {
+        console.error('Error in addCategory:', error);
+    }
 }
 
 async function updateCategory(id, name, icon) {
-    await backend.updateCategory(BigInt(id), name, icon);
-    await loadTasks();
+    try {
+        await backend.updateCategory(BigInt(id), name, icon);
+        setTimeout(loadTasks, 100); // Add a small delay before reloading
+    } catch (error) {
+        console.error('Error in updateCategory:', error);
+    }
 }
 
 window.addEventListener('load', loadTasks);
