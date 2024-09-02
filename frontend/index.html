@@ -97,42 +97,81 @@
         <i data-feather="list" class="category-icon"></i>
         Tasks
     </h2>
-    <ul class="task-list" id="taskList"></ul>
+    <ul class="task-list">
+        <li class="task-item">
+            <span class="task-name">Implement generous freemium model</span>
+            <div>
+                <span class="category">GEMS</span>
+                <span class="due-date">Sep 15, 2024</span>
+            </div>
+        </li>
+        <li class="task-item">
+            <span class="task-name">Complete Web IDE integration</span>
+            <div>
+                <span class="category">GEMS</span>
+                <span class="due-date">Oct 1, 2024</span>
+            </div>
+        </li>
+        <li class="task-item">
+            <span class="task-name">Develop build & debug features</span>
+            <div>
+                <span class="category">Web IDE</span>
+                <span class="due-date">Sep 20, 2024</span>
+            </div>
+        </li>
+        <li class="task-item">
+            <span class="task-name">Create Sample App Carousel</span>
+            <div>
+                <span class="category">Web IDE</span>
+                <span class="due-date">Sep 30, 2024</span>
+            </div>
+        </li>
+        <li class="task-item">
+            <span class="task-name">Advertise on every technical documentation page</span>
+            <div>
+                <span class="category">Web IDE</span>
+                <span class="due-date">Oct 10, 2024</span>
+            </div>
+        </li>
+        <li class="task-item">
+            <span class="task-name">Launch Airdrop campaign</span>
+            <div>
+                <span class="category">OISY</span>
+                <span class="due-date overdue">Aug 31, 2024</span>
+            </div>
+        </li>
+        <li class="task-item">
+            <span class="task-name">Implement Signer Standard</span>
+            <div>
+                <span class="category">OISY</span>
+                <span class="due-date">Sep 25, 2024</span>
+            </div>
+        </li>
+        <li class="task-item">
+            <span class="task-name">Ensure destination compatibility</span>
+            <div>
+                <span class="category">OISY</span>
+                <span class="due-date">Oct 5, 2024</span>
+            </div>
+        </li>
+        <li class="task-item">
+            <span class="task-name">Optimize DEX Liquidity</span>
+            <div>
+                <span class="category">OISY</span>
+                <span class="due-date">Oct 15, 2024</span>
+            </div>
+        </li>
+        <li class="task-item">
+            <span class="task-name">Implement Subsidized DEX Yield</span>
+            <div>
+                <span class="category">OISY</span>
+                <span class="due-date">Oct 30, 2024</span>
+            </div>
+        </li>
+    </ul>
 
     <script>
         feather.replace();
-
-        async function fetchTasks() {
-            try {
-                const response = await fetch('/api/tasks');
-                const tasks = await response.json();
-                const taskList = document.getElementById('taskList');
-                taskList.innerHTML = '';
-
-                tasks.forEach(task => {
-                    const li = document.createElement('li');
-                    li.className = 'task-item';
-                    li.innerHTML = `
-                        <span class="task-name">${task.title}</span>
-                        <div>
-                            <span class="category">${task.category}</span>
-                            <span class="due-date ${isOverdue(task.dueDate) ? 'overdue' : ''}">${task.dueDate}</span>
-                        </div>
-                    `;
-                    taskList.appendChild(li);
-                });
-            } catch (error) {
-                console.error('Error fetching tasks:', error);
-            }
-        }
-
-        function isOverdue(dueDate) {
-            const today = new Date();
-            const dueDateTime = new Date(dueDate);
-            return dueDateTime < today;
-        }
-
-        fetchTasks();
     </script>
 </body>
 </html>
