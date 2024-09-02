@@ -1,10 +1,2 @@
-type Task = 
- record {
-   category: text;
-   dueDate: text;
-   title: text;
- };
 service : {
-  addTask: (text, text, text) -> ();
-  getTasks: () -> (vec Task) query;
 }
