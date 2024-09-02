@@ -19,7 +19,7 @@ async function loadTasks() {
                         .map(task => `
                             <li class="task-item" id="task-${task.id}">
                                 <span contenteditable="true" class="task-name" data-id="${task.id}">${task.name}</span>
-                                <span contenteditable="true" class="due-date ${new Date(task.dueDate) < new Date() ? 'overdue' : ''}" data-id="${task.id}">${task.dueDate}</span>
+                                <span contenteditable="true" class="due-date ${new Date(task.dueDate) < new Date() ? 'overdue' : ''}" data-id="${task.id}">${formatDate(task.dueDate)}</span>
                                 <i data-feather="trash-2" class="delete-task" data-id="${task.id}"></i>
                             </li>
                         `).join('')}
@@ -34,6 +34,11 @@ async function loadTasks() {
     } catch (error) {
         console.error('Error loading tasks:', error);
     }
+}
+
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toISOString().split('T')[0];
 }
 
 function addEventListeners() {

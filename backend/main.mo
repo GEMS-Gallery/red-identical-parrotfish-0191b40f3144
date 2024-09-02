@@ -20,16 +20,16 @@ actor {
   };
 
   var tasks : [Task] = [
-    { id = 0; name = "Implement generous freemium model"; dueDate = "Sep 15, 2024"; categoryId = 0 },
-    { id = 1; name = "Complete Web IDE integration"; dueDate = "Oct 1, 2024"; categoryId = 0 },
-    { id = 2; name = "Develop build & debug features"; dueDate = "Sep 20, 2024"; categoryId = 1 },
-    { id = 3; name = "Create Sample App Carousel"; dueDate = "Sep 30, 2024"; categoryId = 1 },
-    { id = 4; name = "Advertise on every technical documentation page"; dueDate = "Oct 10, 2024"; categoryId = 1 },
-    { id = 5; name = "Launch Airdrop campaign"; dueDate = "Aug 31, 2024"; categoryId = 2 },
-    { id = 6; name = "Implement Signer Standard"; dueDate = "Sep 25, 2024"; categoryId = 2 },
-    { id = 7; name = "Ensure destination compatibility"; dueDate = "Oct 5, 2024"; categoryId = 2 },
-    { id = 8; name = "Optimize DEX Liquidity"; dueDate = "Oct 15, 2024"; categoryId = 2 },
-    { id = 9; name = "Implement Subsidized DEX Yield"; dueDate = "Oct 30, 2024"; categoryId = 2 }
+    { id = 0; name = "Implement generous freemium model"; dueDate = "2024-09-15"; categoryId = 0 },
+    { id = 1; name = "Complete Web IDE integration"; dueDate = "2024-10-01"; categoryId = 0 },
+    { id = 2; name = "Develop build & debug features"; dueDate = "2024-09-20"; categoryId = 1 },
+    { id = 3; name = "Create Sample App Carousel"; dueDate = "2024-09-30"; categoryId = 1 },
+    { id = 4; name = "Advertise on every technical documentation page"; dueDate = "2024-10-10"; categoryId = 1 },
+    { id = 5; name = "Launch Airdrop campaign"; dueDate = "2024-08-31"; categoryId = 2 },
+    { id = 6; name = "Implement Signer Standard"; dueDate = "2024-09-25"; categoryId = 2 },
+    { id = 7; name = "Ensure destination compatibility"; dueDate = "2024-10-05"; categoryId = 2 },
+    { id = 8; name = "Optimize DEX Liquidity"; dueDate = "2024-10-15"; categoryId = 2 },
+    { id = 9; name = "Implement Subsidized DEX Yield"; dueDate = "2024-10-30"; categoryId = 2 }
   ];
   var categories : [Category] = [
     { id = 0; name = "GEMS"; icon = "package" },
