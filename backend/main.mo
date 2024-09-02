@@ -49,6 +49,10 @@ actor {
     newTask
   };
 
+  public query func getTaskAddedNotification(task: Task) : async Text {
+    "Task '" # task.name # "' added successfully"
+  };
+
   public func updateTask(id: Nat, name: Text, dueDate: Text, categoryId: Nat, tag: Text) : async Task {
     Debug.print("Updating task: " # debug_show({ id; name; dueDate; categoryId; tag }));
     var updatedTask : Task = { id = 0; name = ""; dueDate = ""; categoryId = 0; tag = "" };

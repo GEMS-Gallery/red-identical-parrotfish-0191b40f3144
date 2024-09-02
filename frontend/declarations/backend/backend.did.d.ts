@@ -15,6 +15,7 @@ export interface _SERVICE {
   'addTask' : ActorMethod<[string, string, bigint, string], Task>,
   'deleteTask' : ActorMethod<[bigint], boolean>,
   'getCategories' : ActorMethod<[], Array<Category>>,
+  'getTaskAddedNotification' : ActorMethod<[Task], string>,
   'getTasks' : ActorMethod<[], Array<Task>>,
   'updateCategory' : ActorMethod<[bigint, string, string], Category>,
   'updateTask' : ActorMethod<[bigint, string, string, bigint, string], Task>,

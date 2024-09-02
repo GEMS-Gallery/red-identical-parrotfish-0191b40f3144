@@ -174,9 +174,11 @@ async function handleAddTask(event) {
         const tag = 'product';
 
         console.log('Adding task:', { name, dueDate, categoryId, tag });
+        showNotification('Adding task...');
         const newTask = await addTask(name, dueDate, categoryId, tag);
         addTaskElement(newTask);
-        showNotification('Task added successfully');
+        const notificationMessage = await backend.getTaskAddedNotification(newTask);
+        showNotification(notificationMessage);
     } catch (error) {
         console.error('Error adding task:', error);
         showNotification('Error adding task');

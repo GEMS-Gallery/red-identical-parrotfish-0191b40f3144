@@ -16,6 +16,7 @@ export const idlFactory = ({ IDL }) => {
     'addTask' : IDL.Func([IDL.Text, IDL.Text, IDL.Nat, IDL.Text], [Task], []),
     'deleteTask' : IDL.Func([IDL.Nat], [IDL.Bool], []),
     'getCategories' : IDL.Func([], [IDL.Vec(Category)], ['query']),
+    'getTaskAddedNotification' : IDL.Func([Task], [IDL.Text], ['query']),
     'getTasks' : IDL.Func([], [IDL.Vec(Task)], ['query']),
     'updateCategory' : IDL.Func([IDL.Nat, IDL.Text, IDL.Text], [Category], []),
     'updateTask' : IDL.Func(

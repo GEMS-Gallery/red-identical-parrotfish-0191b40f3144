@@ -17,6 +17,7 @@ service : {
   addTask: (text, text, nat, text) -> (Task);
   deleteTask: (nat) -> (bool);
   getCategories: () -> (vec Category) query;
+  getTaskAddedNotification: (Task) -> (text) query;
   getTasks: () -> (vec Task) query;
   updateCategory: (nat, text, text) -> (Category);
   updateTask: (nat, text, text, nat, text) -> (Task);
