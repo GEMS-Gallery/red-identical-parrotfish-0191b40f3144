@@ -63,7 +63,8 @@ function initializeDatePickers() {
             
             instance.calendarContainer.style.left = `${rect.left}px`;
             instance.calendarContainer.style.right = 'auto';
-        }
+        },
+        static: true
     });
 }
 
@@ -84,6 +85,13 @@ function addEventListeners() {
 
     document.querySelectorAll('.delete-task').forEach(element => {
         element.addEventListener('click', handleDeleteTask);
+    });
+
+    document.querySelectorAll('.due-date').forEach(element => {
+        element.addEventListener('click', function(e) {
+            e.stopPropagation();
+            this._flatpickr.open();
+        });
     });
 }
 
