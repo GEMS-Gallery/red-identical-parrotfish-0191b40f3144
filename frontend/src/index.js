@@ -19,7 +19,7 @@ async function loadTasks() {
                         .map(task => `
                             <li class="task-item" id="task-${task.id}">
                                 <span contenteditable="true" class="task-name" data-id="${task.id}">${task.name}</span>
-                                <span contenteditable="true" class="due-date ${new Date(task.dueDate) < new Date() ? 'overdue' : ''}" data-id="${task.id}">${formatDate(task.dueDate)}</span>
+                                <input type="text" class="due-date ${new Date(task.dueDate) < new Date() ? 'overdue' : ''}" data-id="${task.id}" value="${formatDate(task.dueDate)}">
                                 <i data-feather="trash-2" class="delete-task" data-id="${task.id}"></i>
                             </li>
                         `).join('')}
@@ -30,6 +30,7 @@ async function loadTasks() {
         });
 
         feather.replace();
+        initializeDatePickers();
         addEventListeners();
     } catch (error) {
         console.error('Error loading tasks:', error);
@@ -41,8 +42,18 @@ function formatDate(dateString) {
     return date.toISOString().split('T')[0];
 }
 
+function initializeDatePickers() {
+    flatpickr('.due-date', {
+        dateFormat: 'Y-m-d',
+        onChange: function(selectedDates, dateStr, instance) {
+            const taskId = instance.element.dataset.id;
+            handleTaskEdit({ target: instance.element });
+        }
+    });
+}
+
 function addEventListeners() {
-    document.querySelectorAll('.task-name, .due-date').forEach(element => {
+    document.querySelectorAll('.task-name').forEach(element => {
         element.addEventListener('blur', handleTaskEdit);
     });
 
@@ -66,7 +77,7 @@ async function handleTaskEdit(event) {
         const taskId = parseInt(event.target.dataset.id);
         const taskElement = document.getElementById(`task-${taskId}`);
         const name = taskElement.querySelector('.task-name').textContent.trim();
-        const dueDate = taskElement.querySelector('.due-date').textContent.trim();
+        const dueDate = taskElement.querySelector('.due-date').value;
         const categoryId = parseInt(taskElement.closest('.task-list').id.split('-')[1]);
 
         console.log('Updating task:', { taskId, name, dueDate, categoryId });
