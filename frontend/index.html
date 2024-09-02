@@ -79,10 +79,27 @@
                 margin-top: 0.5rem;
             }
         }
+
+        [contenteditable] {
+            outline: none;
+            padding: 0.25rem;
+            border-radius: 0.25rem;
+        }
+
+        [contenteditable]:focus {
+            background-color: #e5e7eb;
+        }
+
+        .add-task, .add-category {
+            cursor: pointer;
+            color: #3b82f6;
+            font-weight: 500;
+        }
     </style>
 </head>
 <body>
     <div id="categories-container"></div>
+    <div class="add-category">+ Add Category</div>
 
     <script src="/src/index.js" type="module"></script>
 </body>
