@@ -1,92 +1,30 @@
-import Bool "mo:base/Bool";
-import Hash "mo:base/Hash";
+import Text "mo:base/Text";
 
 import Array "mo:base/Array";
-import HashMap "mo:base/HashMap";
 import Iter "mo:base/Iter";
-import Nat "mo:base/Nat";
-import Option "mo:base/Option";
-import Result "mo:base/Result";
-import Text "mo:base/Text";
 import Time "mo:base/Time";
 
 actor {
   type Task = {
-    id: Nat;
     title: Text;
-    lead: Text;
-    project: Text;
-    dueDate: ?Text;
-    completed: ?Bool;
+    category: Text;
+    dueDate: Text;
   };
 
-  type Category = {
-    name: Text;
-    icon: Text;
-  };
-
-  stable var categories : [Category] = [
-    { name = "GEMS"; icon = "package" },
-    { name = "Web IDE"; icon = "code" },
-    { name = "OISY"; icon = "globe" }
+  stable var tasks : [Task] = [
+    { title = "Implement generous freemium model"; category = "GEMS"; dueDate = "Sep 15, 2024" },
+    { title = "Complete Web IDE integration"; category = "GEMS"; dueDate = "Oct 1, 2024" },
+    { title = "Develop build & debug features"; category = "Web IDE"; dueDate = "Sep 20, 2024" },
+    { title = "Create Sample App Carousel"; category = "Web IDE"; dueDate = "Sep 30, 2024" },
+    { title = "Advertise on every technical documentation page"; category = "Web IDE"; dueDate = "Oct 10, 2024" },
+    { title = "Launch Airdrop campaign"; category = "OISY"; dueDate = "Aug 31, 2024" },
+    { title = "Implement Signer Standard"; category = "OISY"; dueDate = "Sep 25, 2024" },
+    { title = "Ensure destination compatibility"; category = "OISY"; dueDate = "Oct 5, 2024" },
+    { title = "Optimize DEX Liquidity"; category = "OISY"; dueDate = "Oct 15, 2024" },
+    { title = "Implement Subsidized DEX Yield"; category = "OISY"; dueDate = "Oct 30, 2024" }
   ];
 
-  stable var tasksEntries : [(Nat, Task)] = [];
-  var tasks = HashMap.fromIter<Nat, Task>(tasksEntries.vals(), 0, Nat.equal, Hash.hash);
-  var nextTaskId : Nat = 1;
-
-  public query func getCategories() : async [Category] {
-    return categories;
-  };
-
-  public query func getTasks(category: Text) : async [Task] {
-    return Iter.toArray(tasks.vals());
-  };
-
-  public func addTask(category: Text, task: Task) : async Result.Result<Nat, Text> {
-    let id = nextTaskId;
-    nextTaskId += 1;
-    let newTask : Task = {
-      id = id;
-      title = task.title;
-      lead = task.lead;
-      project = task.project;
-      dueDate = task.dueDate;
-      completed = ?false;
-    };
-    tasks.put(id, newTask);
-    #ok(id)
-  };
-
-  public func updateTaskStatus(taskId: Nat, completed: Bool) : async Result.Result<(), Text> {
-    switch (tasks.get(taskId)) {
-      case (null) { #err("Task not found") };
-      case (?task) {
-        let updatedTask : Task = {
-          id = task.id;
-          title = task.title;
-          lead = task.lead;
-          project = task.project;
-          dueDate = task.dueDate;
-          completed = ?completed;
-        };
-        tasks.put(taskId, updatedTask);
-        #ok()
-      };
-    }
-  };
-
-  public query func filterTasks(category: Text) : async [Task] {
-    Iter.toArray(Iter.filter(tasks.vals(), func (task: Task) : Bool {
-      task.project == category
-    }))
-  };
-
-  system func preupgrade() {
-    tasksEntries := Iter.toArray(tasks.entries());
-  };
-
-  system func postupgrade() {
-    tasks := HashMap.fromIter<Nat, Task>(tasksEntries.vals(), 0, Nat.equal, Hash.hash);
+  public query func getTasks() : async [Task] {
+    return tasks;
   };
 }
