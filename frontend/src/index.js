@@ -49,8 +49,23 @@ function initializeDatePickers() {
             const taskId = instance.element.dataset.id;
             handleTaskEdit({ target: instance.element });
         },
-        position: 'auto',
-        appendTo: document.body
+        position: 'auto right',
+        appendTo: document.body,
+        onOpen: function(selectedDates, dateStr, instance) {
+            const rect = instance.element.getBoundingClientRect();
+            const calendarRect = instance.calendarContainer.getBoundingClientRect();
+            const spaceBelow = window.innerHeight - rect.bottom;
+            const spaceAbove = rect.top;
+            
+            if (spaceBelow < calendarRect.height && spaceAbove > spaceBelow) {
+                instance.calendarContainer.style.top = `${rect.top - calendarRect.height}px`;
+            } else {
+                instance.calendarContainer.style.top = `${rect.bottom}px`;
+            }
+            
+            instance.calendarContainer.style.left = `${rect.left}px`;
+            instance.calendarContainer.style.right = 'auto';
+        }
     });
 }
 

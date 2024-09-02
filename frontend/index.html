@@ -46,6 +46,7 @@
             align-items: center;
             padding: 0.75rem 0;
             border-bottom: 1px solid #e5e7eb;
+            position: relative;
         }
         
         .task-item:last-child {
@@ -114,15 +115,12 @@
             font-family: 'Inter', sans-serif;
         }
 
-        .task-item {
-            position: relative;
-        }
-
-        .flatpickr-calendar {
-            position: absolute;
-            top: 100%;
-            left: 0;
+        .flatpickr-calendar.open {
             z-index: 1000;
+            position: absolute;
+            top: 100% !important;
+            left: auto !important;
+            right: 0 !important;
         }
     </style>
 </head>
