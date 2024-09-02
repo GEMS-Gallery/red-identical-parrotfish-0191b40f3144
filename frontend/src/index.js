@@ -204,10 +204,17 @@ async function handleAddCategory() {
 
 async function handleDeleteTask(event) {
     try {
-        const taskId = parseInt(event.target.dataset.id);
-        await deleteTask(taskId);
-        removeTaskElement(taskId);
-        showNotification('Task deleted successfully');
+        const taskId = parseInt(event.target.closest('.task-item').id.split('-')[1]);
+        if (isNaN(taskId)) {
+            throw new Error('Invalid task ID');
+        }
+        const result = await deleteTask(taskId);
+        if (result) {
+            removeTaskElement(taskId);
+            showNotification('Task deleted successfully');
+        } else {
+            throw new Error('Task not found');
+        }
     } catch (error) {
         console.error('Error deleting task:', error);
         showNotification('Error deleting task');

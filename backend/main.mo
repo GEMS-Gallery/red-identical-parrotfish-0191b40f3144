@@ -69,8 +69,9 @@ actor {
 
   public func deleteTask(id: Nat) : async Bool {
     Debug.print("Deleting task: " # debug_show(id));
+    let initialLength = tasks.size();
     tasks := Array.filter(tasks, func (task: Task) : Bool { task.id != id });
-    true
+    tasks.size() < initialLength
   };
 
   public query func getTasks() : async [Task] {
