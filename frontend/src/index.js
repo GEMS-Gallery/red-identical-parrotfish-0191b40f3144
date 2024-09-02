@@ -48,7 +48,9 @@ function initializeDatePickers() {
         onChange: function(selectedDates, dateStr, instance) {
             const taskId = instance.element.dataset.id;
             handleTaskEdit({ target: instance.element });
-        }
+        },
+        position: 'auto',
+        appendTo: document.body
     });
 }
 
