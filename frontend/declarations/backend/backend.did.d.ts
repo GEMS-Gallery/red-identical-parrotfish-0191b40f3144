@@ -11,13 +11,13 @@ export interface Task {
   'dueDate' : string,
 }
 export interface _SERVICE {
-  'addCategory' : ActorMethod<[string, string], bigint>,
-  'addTask' : ActorMethod<[string, string, bigint, string], bigint>,
+  'addCategory' : ActorMethod<[string, string], Category>,
+  'addTask' : ActorMethod<[string, string, bigint, string], Task>,
   'deleteTask' : ActorMethod<[bigint], boolean>,
   'getCategories' : ActorMethod<[], Array<Category>>,
   'getTasks' : ActorMethod<[], Array<Task>>,
-  'updateCategory' : ActorMethod<[bigint, string, string], boolean>,
-  'updateTask' : ActorMethod<[bigint, string, string, bigint, string], boolean>,
+  'updateCategory' : ActorMethod<[bigint, string, string], Category>,
+  'updateTask' : ActorMethod<[bigint, string, string, bigint, string], Task>,
 }
 export declare const idlFactory: IDL.InterfaceFactory;
 export declare const init: (args: { IDL: typeof IDL }) => IDL.Type[];

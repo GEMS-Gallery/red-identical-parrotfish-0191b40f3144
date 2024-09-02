@@ -139,7 +139,8 @@ async function handleTaskEdit(event) {
         const categoryId = parseInt(taskElement.closest('.task-list').id.split('-')[1]);
 
         console.log('Updating task:', { taskId, name, dueDate, categoryId, tag });
-        await updateTask(taskId, name, dueDate, categoryId, tag);
+        const updatedTask = await updateTask(taskId, name, dueDate, categoryId, tag);
+        updateTaskElement(updatedTask);
         updateTagColors();
         showNotification('Task updated successfully');
     } catch (error) {
@@ -155,7 +156,8 @@ async function handleCategoryEdit(event) {
         const icon = event.target.previousElementSibling.dataset.feather;
 
         console.log('Updating category:', { categoryId, name, icon });
-        await updateCategory(categoryId, name, icon);
+        const updatedCategory = await updateCategory(categoryId, name, icon);
+        updateCategoryElement(updatedCategory);
         showNotification('Category updated successfully');
     } catch (error) {
         console.error('Error updating category:', error);
@@ -172,7 +174,8 @@ async function handleAddTask(event) {
         const tag = 'product';
 
         console.log('Adding task:', { name, dueDate, categoryId, tag });
-        await addTask(name, dueDate, categoryId, tag);
+        const newTask = await addTask(name, dueDate, categoryId, tag);
+        addTaskElement(newTask);
         showNotification('Task added successfully');
     } catch (error) {
         console.error('Error adding task:', error);
@@ -188,7 +191,8 @@ async function handleAddCategory() {
         const icon = 'folder';
 
         console.log('Adding category:', { name, icon });
-        await addCategory(name, icon);
+        const newCategory = await addCategory(name, icon);
+        addCategoryElement(newCategory);
         showNotification('Category added successfully');
     } catch (error) {
         console.error('Error adding category:', error);
@@ -200,6 +204,7 @@ async function handleDeleteTask(event) {
     try {
         const taskId = parseInt(event.target.dataset.id);
         await deleteTask(taskId);
+        removeTaskElement(taskId);
         showNotification('Task deleted successfully');
     } catch (error) {
         console.error('Error deleting task:', error);
@@ -209,8 +214,7 @@ async function handleDeleteTask(event) {
 
 async function addTask(name, dueDate, categoryId, tag) {
     try {
-        await backend.addTask(name, dueDate, BigInt(categoryId), tag);
-        await loadTasks();
+        return await backend.addTask(name, dueDate, BigInt(categoryId), tag);
     } catch (error) {
         console.error('Error in addTask:', error);
         throw error;
@@ -219,8 +223,7 @@ async function addTask(name, dueDate, categoryId, tag) {
 
 async function updateTask(id, name, dueDate, categoryId, tag) {
     try {
-        await backend.updateTask(BigInt(id), name, dueDate, BigInt(categoryId), tag);
-        await loadTasks();
+        return await backend.updateTask(BigInt(id), name, dueDate, BigInt(categoryId), tag);
     } catch (error) {
         console.error('Error in updateTask:', error);
         throw error;
@@ -229,8 +232,7 @@ async function updateTask(id, name, dueDate, categoryId, tag) {
 
 async function deleteTask(id) {
     try {
-        await backend.deleteTask(BigInt(id));
-        await loadTasks();
+        return await backend.deleteTask(BigInt(id));
     } catch (error) {
         console.error('Error in deleteTask:', error);
         throw error;
@@ -239,8 +241,7 @@ async function deleteTask(id) {
 
 async function addCategory(name, icon) {
     try {
-        await backend.addCategory(name, icon);
-        await loadTasks();
+        return await backend.addCategory(name, icon);
     } catch (error) {
         console.error('Error in addCategory:', error);
         throw error;
@@ -249,11 +250,74 @@ async function addCategory(name, icon) {
 
 async function updateCategory(id, name, icon) {
     try {
-        await backend.updateCategory(BigInt(id), name, icon);
-        await loadTasks();
+        return await backend.updateCategory(BigInt(id), name, icon);
     } catch (error) {
         console.error('Error in updateCategory:', error);
         throw error;
+    }
+}
+
+function updateTaskElement(task) {
+    const taskElement = document.getElementById(`task-${task.id}`);
+    if (taskElement) {
+        taskElement.querySelector('.task-name').textContent = task.name;
+        taskElement.querySelector('.due-date').value = task.dueDate;
+        taskElement.querySelector('.tag').value = task.tag;
+        updateTagColors();
+    }
+}
+
+function updateCategoryElement(category) {
+    const categoryElement = document.querySelector(`.category-name[data-id="${category.id}"]`);
+    if (categoryElement) {
+        categoryElement.textContent = category.name;
+        categoryElement.previousElementSibling.dataset.feather = category.icon;
+        feather.replace();
+    }
+}
+
+function addTaskElement(task) {
+    const categoryList = document.getElementById(`category-${task.categoryId}`);
+    if (categoryList) {
+        const taskHtml = `
+            <li class="task-item" id="task-${task.id}">
+                <span contenteditable="true" class="task-name" data-id="${task.id}">${task.name}</span>
+                <input type="text" class="due-date" data-id="${task.id}" value="${task.dueDate}">
+                <select class="tag tag-${task.tag}" data-id="${task.id}">
+                    <option value="marketing" ${task.tag === 'marketing' ? 'selected' : ''}>Marketing</option>
+                    <option value="security" ${task.tag === 'security' ? 'selected' : ''}>Security</option>
+                    <option value="product" ${task.tag === 'product' ? 'selected' : ''}>Product</option>
+                </select>
+                <i data-feather="trash-2" class="delete-task" data-id="${task.id}"></i>
+            </li>
+        `;
+        categoryList.insertAdjacentHTML('beforeend', taskHtml);
+        feather.replace();
+        initializeDatePickers();
+        addEventListeners();
+        updateTagColors();
+    }
+}
+
+function addCategoryElement(category) {
+    const container = document.getElementById('categories-container');
+    const categoryHtml = `
+        <h2>
+            <i data-feather="${category.icon}" class="category-icon"></i>
+            <span contenteditable="true" class="category-name" data-id="${category.id}">${category.name}</span>
+        </h2>
+        <ul class="task-list" id="category-${category.id}"></ul>
+        <div class="add-task" data-category-id="${category.id}">+ Add Task</div>
+    `;
+    container.insertAdjacentHTML('beforeend', categoryHtml);
+    feather.replace();
+    addEventListeners();
+}
+
+function removeTaskElement(taskId) {
+    const taskElement = document.getElementById(`task-${taskId}`);
+    if (taskElement) {
+        taskElement.remove();
     }
 }
 

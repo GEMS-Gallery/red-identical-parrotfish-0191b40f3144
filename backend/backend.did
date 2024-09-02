@@ -13,11 +13,11 @@ type Category =
    name: text;
  };
 service : {
-  addCategory: (text, text) -> (nat);
-  addTask: (text, text, nat, text) -> (nat);
+  addCategory: (text, text) -> (Category);
+  addTask: (text, text, nat, text) -> (Task);
   deleteTask: (nat) -> (bool);
   getCategories: () -> (vec Category) query;
   getTasks: () -> (vec Task) query;
-  updateCategory: (nat, text, text) -> (bool);
-  updateTask: (nat, text, text, nat, text) -> (bool);
+  updateCategory: (nat, text, text) -> (Category);
+  updateTask: (nat, text, text, nat, text) -> (Task);
 }

@@ -12,19 +12,15 @@ export const idlFactory = ({ IDL }) => {
     'dueDate' : IDL.Text,
   });
   return IDL.Service({
-    'addCategory' : IDL.Func([IDL.Text, IDL.Text], [IDL.Nat], []),
-    'addTask' : IDL.Func(
-        [IDL.Text, IDL.Text, IDL.Nat, IDL.Text],
-        [IDL.Nat],
-        [],
-      ),
+    'addCategory' : IDL.Func([IDL.Text, IDL.Text], [Category], []),
+    'addTask' : IDL.Func([IDL.Text, IDL.Text, IDL.Nat, IDL.Text], [Task], []),
     'deleteTask' : IDL.Func([IDL.Nat], [IDL.Bool], []),
     'getCategories' : IDL.Func([], [IDL.Vec(Category)], ['query']),
     'getTasks' : IDL.Func([], [IDL.Vec(Task)], ['query']),
-    'updateCategory' : IDL.Func([IDL.Nat, IDL.Text, IDL.Text], [IDL.Bool], []),
+    'updateCategory' : IDL.Func([IDL.Nat, IDL.Text, IDL.Text], [Category], []),
     'updateTask' : IDL.Func(
         [IDL.Nat, IDL.Text, IDL.Text, IDL.Nat, IDL.Text],
-        [IDL.Bool],
+        [Task],
         [],
       ),
   });

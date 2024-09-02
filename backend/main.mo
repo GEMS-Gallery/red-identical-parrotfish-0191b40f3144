@@ -40,25 +40,27 @@ actor {
   var nextTaskId : Nat = 10;
   var nextCategoryId : Nat = 3;
 
-  public func addTask(name: Text, dueDate: Text, categoryId: Nat, tag: Text) : async Nat {
+  public func addTask(name: Text, dueDate: Text, categoryId: Nat, tag: Text) : async Task {
     let id = nextTaskId;
     nextTaskId += 1;
     let newTask : Task = { id; name; dueDate; categoryId; tag };
     tasks := Array.append(tasks, [newTask]);
     Debug.print("Task added: " # debug_show(newTask));
-    id
+    newTask
   };
 
-  public func updateTask(id: Nat, name: Text, dueDate: Text, categoryId: Nat, tag: Text) : async Bool {
+  public func updateTask(id: Nat, name: Text, dueDate: Text, categoryId: Nat, tag: Text) : async Task {
     Debug.print("Updating task: " # debug_show({ id; name; dueDate; categoryId; tag }));
+    var updatedTask : Task = { id = 0; name = ""; dueDate = ""; categoryId = 0; tag = "" };
     tasks := Array.map(tasks, func (task: Task) : Task {
       if (task.id == id) {
-        { id; name; dueDate; categoryId; tag }
+        updatedTask := { id; name; dueDate; categoryId; tag };
+        updatedTask
       } else {
         task
       }
     });
-    true
+    updatedTask
   };
 
   public func deleteTask(id: Nat) : async Bool {
@@ -71,25 +73,27 @@ actor {
     tasks
   };
 
-  public func addCategory(name: Text, icon: Text) : async Nat {
+  public func addCategory(name: Text, icon: Text) : async Category {
     let id = nextCategoryId;
     nextCategoryId += 1;
     let newCategory : Category = { id; name; icon };
     categories := Array.append(categories, [newCategory]);
     Debug.print("Category added: " # debug_show(newCategory));
-    id
+    newCategory
   };
 
-  public func updateCategory(id: Nat, name: Text, icon: Text) : async Bool {
+  public func updateCategory(id: Nat, name: Text, icon: Text) : async Category {
     Debug.print("Updating category: " # debug_show({ id; name; icon }));
+    var updatedCategory : Category = { id = 0; name = ""; icon = "" };
     categories := Array.map(categories, func (category: Category) : Category {
       if (category.id == id) {
-        { id; name; icon }
+        updatedCategory := { id; name; icon };
+        updatedCategory
       } else {
         category
       }
     });
-    true
+    updatedCategory
   };
 
   public query func getCategories() : async [Category] {
