@@ -49,8 +49,6 @@ function initializeDatePickers() {
             const taskId = instance.element.dataset.id;
             handleTaskEdit({ target: instance.element });
         },
-        position: 'auto right',
-        appendTo: document.body,
         onOpen: function(selectedDates, dateStr, instance) {
             const rect = instance.element.getBoundingClientRect();
             const calendarRect = instance.calendarContainer.getBoundingClientRect();
