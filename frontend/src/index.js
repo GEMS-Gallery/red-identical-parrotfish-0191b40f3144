@@ -20,6 +20,7 @@ async function loadTasks() {
                             <li class="task-item" id="task-${task.id}">
                                 <span contenteditable="true" class="task-name" data-id="${task.id}">${task.name}</span>
                                 <span contenteditable="true" class="due-date ${new Date(task.dueDate) < new Date() ? 'overdue' : ''}" data-id="${task.id}">${task.dueDate}</span>
+                                <i data-feather="trash-2" class="delete-task" data-id="${task.id}"></i>
                             </li>
                         `).join('')}
                 </ul>
@@ -49,18 +50,26 @@ function addEventListeners() {
     });
 
     document.querySelector('.add-category').addEventListener('click', handleAddCategory);
+
+    document.querySelectorAll('.delete-task').forEach(element => {
+        element.addEventListener('click', handleDeleteTask);
+    });
 }
 
 async function handleTaskEdit(event) {
     try {
         const taskId = parseInt(event.target.dataset.id);
         const taskElement = document.getElementById(`task-${taskId}`);
-        const name = taskElement.querySelector('.task-name').textContent.trim() || 'Unnamed Task';
+        const name = taskElement.querySelector('.task-name').textContent.trim();
         const dueDate = taskElement.querySelector('.due-date').textContent.trim() || new Date().toISOString().split('T')[0];
         const categoryId = parseInt(taskElement.closest('.task-list').id.split('-')[1]);
 
-        console.log('Updating task:', { taskId, name, dueDate, categoryId });
-        await updateTask(taskId, name, dueDate, categoryId);
+        if (name === '') {
+            await deleteTask(taskId);
+        } else {
+            console.log('Updating task:', { taskId, name, dueDate, categoryId });
+            await updateTask(taskId, name, dueDate, categoryId);
+        }
     } catch (error) {
         console.error('Error updating task:', error);
     }
@@ -101,6 +110,15 @@ async function handleAddCategory() {
         await addCategory(name, icon);
     } catch (error) {
         console.error('Error adding category:', error);
+    }
+}
+
+async function handleDeleteTask(event) {
+    try {
+        const taskId = parseInt(event.target.dataset.id);
+        await deleteTask(taskId);
+    } catch (error) {
+        console.error('Error deleting task:', error);
     }
 }
 
