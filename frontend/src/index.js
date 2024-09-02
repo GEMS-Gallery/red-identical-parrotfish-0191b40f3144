@@ -20,6 +20,11 @@ async function loadTasks() {
                             <li class="task-item" id="task-${task.id}">
                                 <span contenteditable="true" class="task-name" data-id="${task.id}">${task.name}</span>
                                 <input type="text" class="due-date ${new Date(task.dueDate) < new Date() ? 'overdue' : ''}" data-id="${task.id}" value="${formatDate(task.dueDate)}">
+                                <select class="tag tag-${task.tag}" data-id="${task.id}">
+                                    <option value="marketing" ${task.tag === 'marketing' ? 'selected' : ''}>Marketing</option>
+                                    <option value="security" ${task.tag === 'security' ? 'selected' : ''}>Security</option>
+                                    <option value="product" ${task.tag === 'product' ? 'selected' : ''}>Product</option>
+                                </select>
                                 <i data-feather="trash-2" class="delete-task" data-id="${task.id}"></i>
                             </li>
                         `).join('')}
@@ -93,6 +98,10 @@ function addEventListeners() {
             this._flatpickr.open();
         });
     });
+
+    document.querySelectorAll('.tag').forEach(element => {
+        element.addEventListener('change', handleTaskEdit);
+    });
 }
 
 async function handleTaskEdit(event) {
@@ -101,10 +110,11 @@ async function handleTaskEdit(event) {
         const taskElement = document.getElementById(`task-${taskId}`);
         const name = taskElement.querySelector('.task-name').textContent.trim();
         const dueDate = taskElement.querySelector('.due-date').value;
+        const tag = taskElement.querySelector('.tag').value;
         const categoryId = parseInt(taskElement.closest('.task-list').id.split('-')[1]);
 
-        console.log('Updating task:', { taskId, name, dueDate, categoryId });
-        await updateTask(taskId, name, dueDate, categoryId);
+        console.log('Updating task:', { taskId, name, dueDate, categoryId, tag });
+        await updateTask(taskId, name, dueDate, categoryId, tag);
     } catch (error) {
         console.error('Error updating task:', error);
     }
@@ -128,9 +138,10 @@ async function handleAddTask(event) {
         const categoryId = parseInt(event.target.dataset.categoryId);
         const name = 'New Task';
         const dueDate = new Date().toISOString().split('T')[0];
+        const tag = 'product';
 
-        console.log('Adding task:', { name, dueDate, categoryId });
-        await addTask(name, dueDate, categoryId);
+        console.log('Adding task:', { name, dueDate, categoryId, tag });
+        await addTask(name, dueDate, categoryId, tag);
     } catch (error) {
         console.error('Error adding task:', error);
     }
@@ -157,18 +168,18 @@ async function handleDeleteTask(event) {
     }
 }
 
-async function addTask(name, dueDate, categoryId) {
+async function addTask(name, dueDate, categoryId, tag) {
     try {
-        await backend.addTask(name, dueDate, BigInt(categoryId));
+        await backend.addTask(name, dueDate, BigInt(categoryId), tag);
         await loadTasks();
     } catch (error) {
         console.error('Error in addTask:', error);
     }
 }
 
-async function updateTask(id, name, dueDate, categoryId) {
+async function updateTask(id, name, dueDate, categoryId, tag) {
     try {
-        await backend.updateTask(BigInt(id), name, dueDate, BigInt(categoryId));
+        await backend.updateTask(BigInt(id), name, dueDate, BigInt(categoryId), tag);
         await loadTasks();
     } catch (error) {
         console.error('Error in updateTask:', error);
