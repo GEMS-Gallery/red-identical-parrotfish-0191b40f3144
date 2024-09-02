@@ -37,6 +37,7 @@ async function loadTasks() {
         feather.replace();
         initializeDatePickers();
         addEventListeners();
+        updateTagColors();
     } catch (error) {
         console.error('Error loading tasks:', error);
     }
@@ -104,6 +105,21 @@ function addEventListeners() {
     });
 }
 
+function updateTagColors() {
+    const tagColors = {
+        marketing: { bg: '#e0f2fe', text: '#0369a1' },
+        security: { bg: '#fef9c3', text: '#854d0e' },
+        product: { bg: '#dcfce7', text: '#166534' }
+    };
+
+    document.querySelectorAll('.tag').forEach(tag => {
+        const tagValue = tag.value;
+        const colors = tagColors[tagValue];
+        tag.style.backgroundColor = colors.bg;
+        tag.style.color = colors.text;
+    });
+}
+
 async function handleTaskEdit(event) {
     try {
         const taskId = parseInt(event.target.dataset.id);
@@ -115,6 +131,7 @@ async function handleTaskEdit(event) {
 
         console.log('Updating task:', { taskId, name, dueDate, categoryId, tag });
         await updateTask(taskId, name, dueDate, categoryId, tag);
+        updateTagColors();
     } catch (error) {
         console.error('Error updating task:', error);
     }
